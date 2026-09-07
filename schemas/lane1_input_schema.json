@@ -1,0 +1,74 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lane1BlueprintElementsContract",
+  "description": "Contract between Lane 1 (CAD data extraction) and Lane 2 (OOP data model)",
+  "type": "object",
+  "required": ["version", "units", "elements"],
+  "properties": {
+    "version": {
+      "type": "string",
+      "example": "1.0.0"
+    },
+    "units": {
+      "type": "string",
+      "enum": ["mm", "cm", "m", "inch", "foot"],
+      "default": "mm"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "source_file": { "type": "string" },
+        "extracted_at": { "type": "string" }
+      }
+    },
+    "elements": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "type", "position", "scale"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Unique identifier for the blueprint element"
+          },
+          "type": {
+            "type": "string",
+            "description": "Type of architectural or furniture element",
+            "enum": ["wall", "door", "window", "furniture", "chair", "table"]
+          },
+          "position": {
+            "type": "object",
+            "required": ["x", "y", "z"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "z": { "type": "number" }
+            }
+          },
+          "scale": {
+            "type": "object",
+            "required": ["x", "y", "z"],
+            "properties": {
+              "x": { "type": "number" },
+              "y": { "type": "number" },
+              "z": { "type": "number" }
+            }
+          },
+          "rotation": {
+            "type": "object",
+            "properties": {
+              "x": { "type": "number", "default": 0.0 },
+              "y": { "type": "number", "default": 0.0 },
+              "z": { "type": "number", "default": 0.0 }
+            }
+          },
+          "properties": {
+            "type": "object",
+            "description": "Element-specific metadata (e.g., wall_thickness, opening_direction, material, etc.)",
+            "additionalProperties": true
+          }
+        }
+      }
+    }
+  }
+}

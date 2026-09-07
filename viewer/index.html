@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blueprint 3D Scene Viewer - Lane 3</title>
+  <link rel="stylesheet" href="style.css">
+  <!-- Three.js and OrbitControls -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/three@0.128.0/examples/js/controls/OrbitControls.js"></script>
+</head>
+<body>
+  <div id="canvas-container"></div>
+
+  <!-- App Header -->
+  <header class="app-header">
+    <h1>🏛️ Blueprint 3D Model Viewer</h1>
+    <p>Lane 3: 3D Scene Visualization Engine</p>
+  </header>
+
+  <!-- Controls Panel -->
+  <div id="controls-panel" class="panel">
+    <h2>Scene Controls</h2>
+
+    <div class="control-group">
+      <label>
+        <input type="checkbox" id="toggle-arch" checked>
+        Architectural Elements
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label>
+        <input type="checkbox" id="toggle-furn" checked>
+        Furniture Elements
+      </label>
+    </div>
+
+    <div class="control-group">
+      <label>
+        <input type="checkbox" id="toggle-wireframe">
+        Wireframe Mode
+      </label>
+    </div>
+
+    <div class="control-group">
+      <h2>Camera Mode</h2>
+      <div class="btn-group">
+        <button id="btn-view-3d" class="active">3D Orbit</button>
+        <button id="btn-view-top">Top Plan</button>
+      </div>
+    </div>
+
+    <div class="control-group" style="margin-top: 14px;">
+      <h2>Load Scene</h2>
+      <label for="json-file-input" class="file-input-label">
+        📁 Load Scene JSON
+      </label>
+      <input type="file" id="json-file-input" accept=".json">
+    </div>
+  </div>
+
+  <!-- Inspector Panel -->
+  <div id="inspector-panel" class="panel">
+    <h2>Element Inspector</h2>
+    <div id="inspector-content">
+      <!-- Populated on object click -->
+    </div>
+  </div>
+
+  <!-- Status HUD -->
+  <div id="stats-hud">
+    Objects: <span id="stat-count">0</span> | Generator: <span id="stat-generator">Lane 2</span> | Orbit: Left Click | Pan: Right Click
+  </div>
+
+  <script src="viewer.js"></script>
+</body>
+</html>

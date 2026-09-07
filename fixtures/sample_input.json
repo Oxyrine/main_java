@@ -1,0 +1,74 @@
+{
+  "version": "1.0.0",
+  "units": "mm",
+  "metadata": {
+    "source_file": "floorplan_sample.dxf",
+    "extracted_at": "2026-09-07T14:30:00Z"
+  },
+  "elements": [
+    {
+      "id": "wall_001",
+      "type": "wall",
+      "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "scale": { "x": 5000.0, "y": 200.0, "z": 2800.0 },
+      "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "properties": { "exterior": true, "material": "concrete" }
+    },
+    {
+      "id": "wall_002",
+      "type": "wall",
+      "position": { "x": 5000.0, "y": 0.0, "z": 0.0 },
+      "scale": { "x": 200.0, "y": 4000.0, "z": 2800.0 },
+      "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "properties": { "exterior": true, "material": "concrete" }
+    },
+    {
+      "id": "wall_003",
+      "type": "wall",
+      "position": { "x": 0.0, "y": 4000.0, "z": 0.0 },
+      "scale": { "x": 5000.0, "y": 200.0, "z": 2800.0 },
+      "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "properties": { "exterior": true, "material": "concrete" }
+    },
+    {
+      "id": "wall_004",
+      "type": "wall",
+      "position": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "scale": { "x": 200.0, "y": 4000.0, "z": 2800.0 },
+      "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "properties": { "exterior": true, "material": "concrete" }
+    },
+    {
+      "id": "door_001",
+      "type": "door",
+      "position": { "x": 2000.0, "y": 0.0, "z": 0.0 },
+      "scale": { "x": 900.0, "y": 200.0, "z": 2100.0 },
+      "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "properties": { "swing_direction": "inward", "open_angle": 90.0 }
+    },
+    {
+      "id": "window_001",
+      "type": "window",
+      "position": { "x": 3500.0, "y": 0.0, "z": 900.0 },
+      "scale": { "x": 1200.0, "y": 200.0, "z": 1200.0 },
+      "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "properties": { "sill_height": 900.0, "glazing": "double" }
+    },
+    {
+      "id": "table_001",
+      "type": "table",
+      "position": { "x": 2500.0, "y": 2000.0, "z": 0.0 },
+      "scale": { "x": 1400.0, "y": 800.0, "z": 750.0 },
+      "rotation": { "x": 0.0, "y": 0.0, "z": 0.0 },
+      "properties": { "style": "office_desk" }
+    },
+    {
+      "id": "chair_001",
+      "type": "chair",
+      "position": { "x": 2500.0, "y": 2500.0, "z": 0.0 },
+      "scale": { "x": 500.0, "y": 500.0, "z": 900.0 },
+      "rotation": { "x": 0.0, "y": 0.0, "z": 180.0 },
+      "properties": { "swivel": true }
+    }
+  ]
+}

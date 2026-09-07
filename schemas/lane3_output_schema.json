@@ -1,0 +1,122 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Lane3SceneExportContract",
+  "description": "Contract between Lane 2 (OOP data model) and Lane 3 (3D scene generator: Blender bpy or Three.js)",
+  "type": "object",
+  "required": ["format_version", "scene_metadata", "objects"],
+  "properties": {
+    "format_version": {
+      "type": "string",
+      "example": "1.0.0"
+    },
+    "scene_metadata": {
+      "type": "object",
+      "required": ["generator", "target_units", "element_count"],
+      "properties": {
+        "generator": { "type": "string" },
+        "generated_at": { "type": "string" },
+        "target_units": { "type": "string", "enum": ["m", "mm", "cm"] },
+        "element_count": { "type": "integer" },
+        "scene_bounds": {
+          "type": "object",
+          "properties": {
+            "min": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 3,
+              "maxItems": 3
+            },
+            "max": {
+              "type": "array",
+              "items": { "type": "number" },
+              "minItems": 3,
+              "maxItems": 3
+            }
+          }
+        }
+      }
+    },
+    "objects": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "category", "type", "geometry", "transform"],
+        "properties": {
+          "id": { "type": "string" },
+          "name": { "type": "string" },
+          "category": {
+            "type": "string",
+            "enum": ["architectural", "furniture", "utility"]
+          },
+          "type": { "type": "string" },
+          "geometry": {
+            "type": "object",
+            "required": ["primitive", "dimensions"],
+            "properties": {
+              "primitive": {
+                "type": "string",
+                "enum": ["box", "plane", "cylinder", "mesh"]
+              },
+              "dimensions": {
+                "type": "object",
+                "required": ["width", "depth", "height"],
+                "properties": {
+                  "width": { "type": "number" },
+                  "depth": { "type": "number" },
+                  "height": { "type": "number" }
+                }
+              }
+            }
+          },
+          "transform": {
+            "type": "object",
+            "required": ["translation", "rotation", "scale"],
+            "properties": {
+              "translation": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number" },
+                  "y": { "type": "number" },
+                  "z": { "type": "number" }
+                }
+              },
+              "rotation": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number" },
+                  "y": { "type": "number" },
+                  "z": { "type": "number" }
+                }
+              },
+              "scale": {
+                "type": "object",
+                "properties": {
+                  "x": { "type": "number" },
+                  "y": { "type": "number" },
+                  "z": { "type": "number" }
+                }
+              }
+            }
+          },
+          "material": {
+            "type": "object",
+            "properties": {
+              "name": { "type": "string" },
+              "color": {
+                "type": "array",
+                "items": { "type": "number" },
+                "minItems": 3,
+                "maxItems": 4
+              },
+              "roughness": { "type": "number" },
+              "metallic": { "type": "number" }
+            }
+          },
+          "metadata": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
