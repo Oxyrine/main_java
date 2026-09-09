@@ -1,5 +1,5 @@
 /**
- * Lane 3: Interactive Three.js 3D Web Viewer for Blueprint Scene Graphs.
+ * Interactive Three.js 3D Web Viewer & Pipeline Frontend.
  */
 
 // Embedded fallback sample scene data (Lane 3 schema)
@@ -99,8 +99,8 @@ class SceneViewer {
     this.initHelpers();
     this.initEvents();
 
-    // Try fetching exported fixture or fallback to embedded
-    this.loadInitialScene();
+    // Load initial scene via API or fallback
+    this.loadPreset("/api/sample", "Sample Floorplan (8 elements)");
     this.animate();
   }
 
@@ -109,7 +109,7 @@ class SceneViewer {
     this.scene.background = new THREE.Color(0x12151c);
 
     const aspect = window.innerWidth / window.innerHeight;
-    this.camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 1000);
+    this.camera = new THREE.PerspectiveCamera(60, aspect, 0.1, 2000);
     this.camera.position.set(5, -7, 6);
     this.camera.up.set(0, 0, 1); // Z is UP in architectural CAD
 
@@ -130,17 +130,15 @@ class SceneViewer {
   }
 
   initLights() {
-    const ambient = new THREE.AmbientLight(0xffffff, 0.6);
+    const ambient = new THREE.AmbientLight(0xffffff, 0.65);
     this.scene.add(ambient);
 
-    const sun = new THREE.DirectionalLight(0xffffff, 0.8);
-    sun.position.set(8, -10, 12);
+    const sun = new THREE.DirectionalLight(0xffffff, 0.85);
+    sun.position.set(15, -20, 25);
     sun.castShadow = true;
     sun.shadow.mapSize.width = 2048;
     sun.shadow.mapSize.height = 2048;
-    sun.shadow.camera.near = 0.5;
-    sun.shadow.camera.far = 50;
-    const d = 15;
+    const d = 40;
     sun.shadow.camera.left = -d;
     sun.shadow.camera.right = d;
     sun.shadow.camera.top = d;
@@ -149,43 +147,46 @@ class SceneViewer {
   }
 
   initHelpers() {
-    // Ground Grid in XY plane
-    const grid = new THREE.GridHelper(30, 30, 0x444455, 0x222233);
+    const grid = new THREE.GridHelper(100, 100, 0x444455, 0x222233);
     grid.rotation.x = Math.PI / 2;
     this.scene.add(grid);
 
-    const axes = new THREE.AxesHelper(2);
+    const axes = new THREE.AxesHelper(3);
     this.scene.add(axes);
   }
 
-  loadInitialScene() {
-    // Try fetching generated output or fallback
-    fetch("../fixtures/sample_output.json")
+  loadPreset(url, displayName) {
+    fetch(url)
       .then(res => {
-        if (!res.ok) throw new Error("Fetch failed");
+        if (!res.ok) throw new Error("Network error");
         return res.json();
       })
-      .then(data => this.renderSceneData(data))
+      .then(data => {
+        this.renderSceneData(data, displayName);
+      })
       .catch(() => {
-        console.log("Using embedded sample scene data.");
-        this.renderSceneData(FALLBACK_SCENE);
+        console.log("Using embedded sample data.");
+        this.renderSceneData(FALLBACK_SCENE, displayName);
       });
   }
 
-  renderSceneData(sceneData) {
+  renderSceneData(sceneData, sourceName = "Loaded Model") {
     // Clear previous elements
     this.interactiveObjects.forEach(obj => this.scene.remove(obj));
     this.interactiveObjects = [];
+    this.deselectObject();
 
     const objects = sceneData.objects || [];
     const bounds = sceneData.scene_metadata?.scene_bounds || { min: [0,0,0], max: [10,10,3] };
 
-    // Recenter camera to scene bounding box
+    // Center camera to scene bounding box
     const cx = (bounds.min[0] + bounds.max[0]) / 2;
     const cy = (bounds.min[1] + bounds.max[1]) / 2;
     const cz = (bounds.min[2] + bounds.max[2]) / 2;
+    const span = Math.max(bounds.max[0] - bounds.min[0], bounds.max[1] - bounds.min[1], 10);
+
     this.controls.target.set(cx, cy, cz);
-    this.camera.position.set(cx, cy - 8, cz + 6);
+    this.camera.position.set(cx, cy - span * 1.2, cz + span * 0.9);
     this.controls.update();
 
     objects.forEach(item => {
@@ -201,7 +202,6 @@ class SceneViewer {
         geometry = new THREE.CylinderGeometry(dims.width / 2, dims.width / 2, dims.height, 24);
         geometry.rotateX(Math.PI / 2);
       } else {
-        // Box primitive: dimensions.width is X, depth is Y, height is Z
         geometry = new THREE.BoxGeometry(dims.width, dims.depth, dims.height);
       }
 
@@ -227,14 +227,13 @@ class SceneViewer {
 
       mesh.castShadow = !isTransparent;
       mesh.receiveShadow = true;
-
-      // Store metadata for inspector
       mesh.userData = item;
       this.scene.add(mesh);
       this.interactiveObjects.push(mesh);
     });
 
     document.getElementById("stat-count").textContent = objects.length;
+    document.getElementById("stat-source").textContent = sourceName;
     document.getElementById("stat-generator").textContent = sceneData.scene_metadata?.generator || "Lane 2";
   }
 
@@ -260,22 +259,52 @@ class SceneViewer {
       }
     });
 
-    // File input handler
-    const fileInput = document.getElementById("json-file-input");
+    // File input handler (DXF, CSV, JSON via backend or local parse)
+    const fileInput = document.getElementById("blueprint-file-input");
+    const statusText = document.getElementById("upload-status");
+
     fileInput.addEventListener("change", (e) => {
       const file = e.target.files[0];
-      if (file) {
-        const reader = new FileReader();
-        reader.onload = (evt) => {
-          try {
-            const data = JSON.parse(evt.target.result);
-            this.renderSceneData(data);
-          } catch (err) {
-            alert("Error parsing JSON file: " + err.message);
+      if (!file) return;
+
+      statusText.textContent = `Processing ${file.name}...`;
+
+      // Try uploading to backend /api/convert
+      const formData = new FormData();
+      formData.append("file", file);
+
+      fetch("/api/convert", {
+        method: "POST",
+        body: formData,
+      })
+        .then(res => {
+          if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Upload failed"); });
+          return res.json();
+        })
+        .then(data => {
+          if (data.success && data.scene_data) {
+            statusText.textContent = `Converted ${data.element_count} items in ${data.duration_ms}ms!`;
+            this.renderSceneData(data.scene_data, file.name);
           }
-        };
-        reader.readAsText(file);
-      }
+        })
+        .catch(err => {
+          // If backend not running, fallback to client-side JSON read
+          if (file.name.endsWith(".json")) {
+            const reader = new FileReader();
+            reader.onload = (evt) => {
+              try {
+                const data = JSON.parse(evt.target.result);
+                statusText.textContent = `Loaded JSON (${file.name})`;
+                this.renderSceneData(data, file.name);
+              } catch (e2) {
+                statusText.textContent = `Error: ${e2.message}`;
+              }
+            };
+            reader.readAsText(file);
+          } else {
+            statusText.textContent = `Backend error: ${err.message}. Run 'python app.py' for DXF/CSV conversion.`;
+          }
+        });
     });
 
     // Layer toggles
@@ -300,16 +329,29 @@ class SceneViewer {
 
     // Camera views
     document.getElementById("btn-view-3d").addEventListener("click", () => {
-      this.camera.position.set(5, -7, 6);
+      this.controls.enableRotate = true;
       this.camera.up.set(0, 0, 1);
       this.controls.update();
+      document.getElementById("btn-view-3d").classList.add("active");
+      document.getElementById("btn-view-top").classList.remove("active");
     });
 
     document.getElementById("btn-view-top").addEventListener("click", () => {
       const target = this.controls.target;
-      this.camera.position.set(target.x, target.y, target.z + 12);
+      this.camera.position.set(target.x, target.y, target.z + 30);
       this.camera.up.set(0, 1, 0);
       this.controls.update();
+      document.getElementById("btn-view-top").classList.add("active");
+      document.getElementById("btn-view-3d").classList.remove("active");
+    });
+
+    // Preset buttons
+    document.getElementById("btn-load-sample").addEventListener("click", () => {
+      this.loadPreset("/api/sample", "Sample Floorplan (8 elements)");
+    });
+
+    document.getElementById("btn-load-legacy").addEventListener("click", () => {
+      this.loadPreset("/api/legacy", "Legacy CAD Multileader (222 elements)");
     });
   }
 

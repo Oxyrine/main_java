@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Blueprint 3D Scene Viewer - Lane 3</title>
+  <title>Blueprint 3D Scene Viewer - End-to-End Pipeline</title>
   <link rel="stylesheet" href="style.css">
   <!-- Three.js and OrbitControls -->
   <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
@@ -14,8 +14,8 @@
 
   <!-- App Header -->
   <header class="app-header">
-    <h1>🏛️ Blueprint 3D Model Viewer</h1>
-    <p>Lane 3: 3D Scene Visualization Engine</p>
+    <h1>🏛️ Blueprint to 3D Model Converter</h1>
+    <p>Automated CAD Extraction &bull; OOP Domain Model &bull; 3D Generation</p>
   </header>
 
   <!-- Controls Panel -->
@@ -52,11 +52,20 @@
     </div>
 
     <div class="control-group" style="margin-top: 14px;">
-      <h2>Load Scene</h2>
-      <label for="json-file-input" class="file-input-label">
-        📁 Load Scene JSON
+      <h2>Upload Blueprint</h2>
+      <label for="blueprint-file-input" class="file-input-label">
+        📂 Upload DXF / CSV / JSON
       </label>
-      <input type="file" id="json-file-input" accept=".json">
+      <input type="file" id="blueprint-file-input" accept=".dxf,.csv,.json,.txt">
+      <p id="upload-status" style="font-size: 0.72rem; color: var(--text-secondary); margin-top: 6px;"></p>
+    </div>
+
+    <div class="control-group" style="margin-top: 10px;">
+      <h2>Quick Presets</h2>
+      <div class="btn-group">
+        <button id="btn-load-sample">Sample (8)</button>
+        <button id="btn-load-legacy">CAD (222)</button>
+      </div>
     </div>
   </div>
 
@@ -70,7 +79,7 @@
 
   <!-- Status HUD -->
   <div id="stats-hud">
-    Objects: <span id="stat-count">0</span> | Generator: <span id="stat-generator">Lane 2</span> | Orbit: Left Click | Pan: Right Click
+    Source: <span id="stat-source">Sample Floorplan</span> | Objects: <span id="stat-count">0</span> | Generator: <span id="stat-generator">Lane 2</span> | Orbit: Left Click | Pan: Right Click
   </div>
 
   <script src="viewer.js"></script>

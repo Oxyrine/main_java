@@ -187,7 +187,7 @@ class BlueprintParser:
         return elements
 
     def parse_file(self, file_path: Union[str, Path]) -> List[BlueprintElement]:
-        """Automatic file detection and parsing (JSON or CSV)."""
+        """Automatic file detection and parsing (JSON, CSV, or DXF)."""
         path = Path(file_path)
         if not path.exists():
             raise FileNotFoundError(f"Input file not found: {path}")
@@ -197,7 +197,12 @@ class BlueprintParser:
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
             return self.parse_json_dict(data)
+        elif suffix == ".dxf":
+            from src.extraction import CadExtractor
+            extractor = CadExtractor(units=self.default_units)
+            extracted = extractor.extract_file(path)
+            return self.parse_json_dict(extracted)
         elif suffix in [".csv", ".txt"]:
             return self.parse_csv_file(path)
         else:
-            raise ValueError(f"Unsupported file format: {suffix}. Supported: .json, .csv")
+            raise ValueError(f"Unsupported file format: {suffix}. Supported: .json, .csv, .dxf")
