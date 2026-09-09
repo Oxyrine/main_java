@@ -105,3 +105,44 @@ class Window(ArchitecturalElement):
             roughness=0.1,
             metallic=0.1,
         )
+
+
+class Floor(ArchitecturalElement):
+    """Represents a floor slab for an enclosed architectural room."""
+
+    def __init__(
+        self,
+        element_id: str,
+        name: Optional[str] = None,
+        position: Optional[Vector3D] = None,
+        scale: Optional[Vector3D] = None,
+        rotation: Optional[Vector3D] = None,
+        properties: Optional[Dict[str, Any]] = None,
+    ) -> None:
+        super().__init__(element_id, name, position, scale, rotation, properties)
+        self.room_type: str = self.properties.get("room_type", "room")
+        self.room_id: str = self.properties.get("room_id", element_id)
+
+    @property
+    def element_type(self) -> str:
+        return "floor"
+
+    def get_default_material(self) -> Material:
+        palette = {
+            "living": [0.85, 0.82, 0.78, 1.0],
+            "bedroom": [0.82, 0.84, 0.88, 1.0],
+            "kitchen": [0.88, 0.88, 0.86, 1.0],
+            "bathroom": [0.72, 0.82, 0.88, 1.0],
+            "sauna": [0.82, 0.60, 0.35, 1.0],
+            "utility": [0.75, 0.82, 0.85, 1.0],
+            "entry": [0.78, 0.76, 0.74, 1.0],
+            "balcony": [0.75, 0.75, 0.75, 1.0],
+        }
+        color = palette.get(self.room_type, [0.84, 0.84, 0.82, 1.0])
+        return Material(
+            name=f"FloorMaterial_{self.room_type.capitalize()}",
+            color=color,
+            roughness=0.5,
+            metallic=0.02,
+        )
+

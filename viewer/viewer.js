@@ -2,6 +2,16 @@
  * Interactive Three.js 3D Web Viewer & Pipeline Frontend.
  */
 
+function escapeHtml(str) {
+  if (str === null || str === undefined) return "";
+  return String(str)
+    .replace(/&/g, "&amp;")
+    .replace(/</g, "&lt;")
+    .replace(/>/g, "&gt;")
+    .replace(/"/g, "&quot;")
+    .replace(/'/g, "&#039;");
+}
+
 // Embedded fallback sample scene data (Lane 3 schema)
 const FALLBACK_SCENE = {
   "format_version": "1.0.0",
@@ -93,6 +103,7 @@ class SceneViewer {
     this.interactiveObjects = [];
     this.selectedMesh = null;
     this.wireframeMode = false;
+    this.loadedBlueprints = new Map();
 
     this.initThree();
     this.initLights();
@@ -259,60 +270,52 @@ class SceneViewer {
       }
     });
 
-    // File input handler (DXF, CSV, JSON via backend or local parse)
+    // File input handler (DXF, CSV, JSON, PNG, JPG via backend or local parse)
     const fileInput = document.getElementById("blueprint-file-input");
-    const statusText = document.getElementById("upload-status");
+    const switcher = document.getElementById("blueprint-switcher");
 
-    fileInput.addEventListener("change", (e) => {
-      const file = e.target.files[0];
-      if (!file) return;
+    if (switcher) {
+      switcher.addEventListener("change", (e) => {
+        const item = this.loadedBlueprints.get(e.target.value);
+        if (item) {
+          this.renderSceneData(item.scene_data, e.target.value);
+        }
+      });
+    }
 
-      statusText.textContent = `Processing ${file.name}...`;
+    if (fileInput) {
+      fileInput.addEventListener("change", (e) => {
+        const files = Array.from(e.target.files);
+        this.processFiles(files);
+      });
+    }
 
-      // Try uploading to backend /api/convert
-      const formData = new FormData();
-      formData.append("file", file);
-
-      fetch("/api/convert", {
-        method: "POST",
-        body: formData,
-      })
-        .then(res => {
-          if (!res.ok) return res.json().then(d => { throw new Error(d.error || "Upload failed"); });
-          return res.json();
-        })
-        .then(data => {
-          if (data.success && data.scene_data) {
-            statusText.textContent = `Converted ${data.element_count} items in ${data.duration_ms}ms!`;
-            this.renderSceneData(data.scene_data, file.name);
-          }
-        })
-        .catch(err => {
-          // If backend not running, fallback to client-side JSON read
-          if (file.name.endsWith(".json")) {
-            const reader = new FileReader();
-            reader.onload = (evt) => {
-              try {
-                const data = JSON.parse(evt.target.result);
-                statusText.textContent = `Loaded JSON (${file.name})`;
-                this.renderSceneData(data, file.name);
-              } catch (e2) {
-                statusText.textContent = `Error: ${e2.message}`;
-              }
-            };
-            reader.readAsText(file);
-          } else {
-            statusText.textContent = `Backend error: ${err.message}. Run 'python app.py' for DXF/CSV conversion.`;
-          }
-        });
+    // Drag-and-drop onto viewer canvas / window
+    window.addEventListener("dragover", (e) => e.preventDefault());
+    window.addEventListener("drop", (e) => {
+      e.preventDefault();
+      if (e.dataTransfer && e.dataTransfer.files && e.dataTransfer.files.length > 0) {
+        this.processFiles(Array.from(e.dataTransfer.files));
+      }
     });
 
     // Layer toggles
     document.getElementById("toggle-arch").addEventListener("change", (e) => {
       this.interactiveObjects.forEach(obj => {
-        if (obj.userData.category === "architectural") obj.visible = e.target.checked;
+        if (obj.userData.category === "architectural" && obj.userData.type !== "floor") {
+          obj.visible = e.target.checked;
+        }
       });
     });
+
+    const toggleRooms = document.getElementById("toggle-rooms");
+    if (toggleRooms) {
+      toggleRooms.addEventListener("change", (e) => {
+        this.interactiveObjects.forEach(obj => {
+          if (obj.userData.type === "floor") obj.visible = e.target.checked;
+        });
+      });
+    }
 
     document.getElementById("toggle-furn").addEventListener("change", (e) => {
       this.interactiveObjects.forEach(obj => {
@@ -353,6 +356,103 @@ class SceneViewer {
     document.getElementById("btn-load-legacy").addEventListener("click", () => {
       this.loadPreset("/api/legacy", "Legacy CAD Multileader (222 elements)");
     });
+
+    const btnRes = document.getElementById("btn-load-residential");
+    if (btnRes) {
+      btnRes.addEventListener("click", () => {
+        this.loadPreset("/api/residential", "Residential Flat (40 elements)");
+      });
+    }
+
+    const btnSyn = document.getElementById("btn-load-synthetic");
+    if (btnSyn) {
+      btnSyn.addEventListener("click", () => {
+        this.loadPreset("/api/synthetic", "Synthetic 3-Room (28 elements)");
+      });
+    }
+  }
+
+  async processFiles(files) {
+    const statusText = document.getElementById("upload-status");
+    const switcherContainer = document.getElementById("blueprint-switcher-container");
+    const switcher = document.getElementById("blueprint-switcher");
+
+    if (!files || files.length === 0) return;
+
+    statusText.textContent = files.length === 1
+      ? `Processing ${files[0].name}...`
+      : `Processing ${files.length} blueprints...`;
+
+    let firstLoadedName = null;
+
+    for (let i = 0; i < files.length; i++) {
+      const file = files[i];
+      statusText.textContent = `Converting (${i + 1}/${files.length}): ${file.name}...`;
+
+      try {
+        const formData = new FormData();
+        formData.append("file", file);
+
+        const res = await fetch("/api/convert", {
+          method: "POST",
+          body: formData,
+        });
+
+        if (!res.ok) {
+          const errData = await res.json().catch(() => ({}));
+          throw new Error(errData.error || `HTTP ${res.status}`);
+        }
+
+        const data = await res.json();
+        if (data.success && data.scene_data) {
+          this.loadedBlueprints.set(file.name, {
+            scene_data: data.scene_data,
+            element_count: data.element_count,
+            duration_ms: data.duration_ms
+          });
+          if (!firstLoadedName) {
+            firstLoadedName = file.name;
+          }
+        }
+      } catch (err) {
+        if (file.name.endsWith(".json")) {
+          try {
+            const text = await file.text();
+            const data = JSON.parse(text);
+            this.loadedBlueprints.set(file.name, {
+              scene_data: data,
+              element_count: (data.objects || []).length,
+              duration_ms: 0
+            });
+            if (!firstLoadedName) firstLoadedName = file.name;
+          } catch (e2) {
+            console.error("Local JSON parse error:", e2);
+          }
+        } else {
+          console.error("Conversion error on", file.name, err);
+          statusText.textContent = `Error converting ${file.name}: ${err.message}`;
+        }
+      }
+    }
+
+    if (this.loadedBlueprints.size > 0) {
+      if (switcher) {
+        switcher.innerHTML = "";
+        for (const [name, info] of this.loadedBlueprints.entries()) {
+          const opt = document.createElement("option");
+          opt.value = name;
+          opt.textContent = `${name} (${info.element_count} items)`;
+          switcher.appendChild(opt);
+        }
+      }
+
+      if (switcherContainer) switcherContainer.style.display = "block";
+      const activeName = firstLoadedName || Array.from(this.loadedBlueprints.keys())[0];
+      if (switcher) switcher.value = activeName;
+      const active = this.loadedBlueprints.get(activeName);
+      this.renderSceneData(active.scene_data, activeName);
+      statusText.textContent = `Ready! Loaded ${this.loadedBlueprints.size} blueprint(s). Active: ${activeName} (${active.element_count} items, ${active.duration_ms}ms)`;
+    }
   }
 
   selectObject(mesh) {
@@ -365,13 +465,24 @@ class SceneViewer {
     const container = document.getElementById("inspector-content");
     const data = mesh.userData;
 
+    let propsHtml = "";
+    const props = data.properties || data.metadata;
+    if (props && typeof props === "object") {
+      for (const [k, v] of Object.entries(props)) {
+        if (v !== null && v !== undefined && typeof v !== "object") {
+          propsHtml += `<div class="prop-row"><span class="prop-key">${escapeHtml(k)}:</span><span class="prop-val">${escapeHtml(v)}</span></div>`;
+        }
+      }
+    }
+
     container.innerHTML = `
-      <div class="prop-row"><span class="prop-key">ID:</span><span class="prop-val">${data.id}</span></div>
-      <div class="prop-row"><span class="prop-key">Name:</span><span class="prop-val">${data.name || data.id}</span></div>
-      <div class="prop-row"><span class="prop-key">Type:</span><span class="prop-val">${data.type}</span></div>
-      <div class="prop-row"><span class="prop-key">Category:</span><span class="prop-val">${data.category}</span></div>
-      <div class="prop-row"><span class="prop-key">Dimensions:</span><span class="prop-val">W:${data.geometry?.dimensions?.width}m D:${data.geometry?.dimensions?.depth}m H:${data.geometry?.dimensions?.height}m</span></div>
-      <div class="prop-row"><span class="prop-key">Position:</span><span class="prop-val">(${data.transform?.translation?.x}, ${data.transform?.translation?.y}, ${data.transform?.translation?.z})</span></div>
+      <div class="prop-row"><span class="prop-key">ID:</span><span class="prop-val">${escapeHtml(data.id)}</span></div>
+      <div class="prop-row"><span class="prop-key">Name:</span><span class="prop-val">${escapeHtml(data.name || data.id)}</span></div>
+      <div class="prop-row"><span class="prop-key">Type:</span><span class="prop-val">${escapeHtml(data.type)}</span></div>
+      <div class="prop-row"><span class="prop-key">Category:</span><span class="prop-val">${escapeHtml(data.category)}</span></div>
+      <div class="prop-row"><span class="prop-key">Dimensions:</span><span class="prop-val">W:${escapeHtml(data.geometry?.dimensions?.width)}m D:${escapeHtml(data.geometry?.dimensions?.depth)}m H:${escapeHtml(data.geometry?.dimensions?.height)}m</span></div>
+      <div class="prop-row"><span class="prop-key">Position:</span><span class="prop-val">(${escapeHtml(data.transform?.translation?.x)}, ${escapeHtml(data.transform?.translation?.y)}, ${escapeHtml(data.transform?.translation?.z)})</span></div>
+      ${propsHtml}
     `;
     panel.style.display = "block";
   }

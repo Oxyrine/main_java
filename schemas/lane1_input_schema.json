@@ -34,7 +34,7 @@
           "type": {
             "type": "string",
             "description": "Type of architectural or furniture element",
-            "enum": ["wall", "door", "window", "furniture", "chair", "table"]
+            "enum": ["wall", "door", "window", "furniture", "chair", "table", "floor"]
           },
           "position": {
             "type": "object",

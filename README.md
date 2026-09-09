@@ -75,8 +75,8 @@ Lane 2 constitutes the core software engineering layer of the project. It provid
                         BlueprintElement (Abstract Base Class)
                        /                                      \
         ArchitecturalElement                               FurnitureElement
-         /        |        \                                /      |      \
-      Wall      Door     Window                          Table   Chair  GenericFurniture
+       /      |       |      \                              /      |      \
+     Wall   Door   Window   Floor                        Table   Chair  GenericFurniture
 ```
 
 * **Abstraction (`src/models/base.py`):**
@@ -251,6 +251,26 @@ Execute the unit test suite to verify model math, polymorphic behavior, parsing,
 python -m pytest
 ```
 
+### 4. OpenCV Floor-Plan Vision Pipeline (`src/vision/`)
+
+An automated computer-vision pipeline that performs genuine feature detection from 2D architectural raster drawings (`.png`, `.jpg`):
+
+- **Stage 0 (Preprocess):** Auto-deskew via Hough transform line orientations, bounding-box content-crop (stripping legend/title blocks), and downscaling.
+- **Stage 1 (Wall Mask):** HSV filter (`S < 70, V < 215`) followed by distance-transform medial-axis mode estimation to isolate thick structural walls from thin lines, hatching, and text.
+- **Stage 2 (Vectorization):** Hough lines with Manhattan orthogonal snapping (or `--free-angle`), collinear segment interval merging, and junction endpoint snapping.
+- **Stage 3 (Room Extraction):** Sealed wall topological flood-filling, connected components, room boundary polygon approximation, and exterior wall identification.
+- **Stage 4 (Opening Detection):** Wall gap scanning and quarter-circle door swing arc detection in the thin-ink mask, differentiating doors from windows.
+- **Stage 5 (Scale Calibration):** Chained scale inference: manual `--mm-per-px` override $\rightarrow$ `--known-width-mm` $\rightarrow$ median door arc radius ($850\text{ mm} / R$) $\rightarrow$ default envelope fallback.
+- **Stage 6 (Semantic Labels & Floors):** Optional Tesseract OCR for multilingual room classification (Living, Bedroom, Kitchen, WC), emitting thin `Floor` slabs and contextual furniture.
+
+```bash
+# Process synthetic or scanned residential floor plan
+python src/pipeline.py -i fixtures/sample_floorplan.png -o fixtures/cv_output.json --debug-overlay fixtures/cv_overlay.png
+
+# With explicit scale calibration and free-angle mode:
+python src/pipeline.py -i plan.jpg --known-width-mm 12000 --free-angle
+```
+
 ---
 
 ## 👥 Summary of Completed Work
@@ -258,9 +278,10 @@ python -m pytest
 | Component | Status | Key Deliverables |
 | :--- | :---: | :--- |
 | **Lane 1 Data Contract** | ✅ Complete | `schemas/lane1_input_schema.json`, `fixtures/sample_input.json`, `fixtures/sample_input.csv` |
-| **Lane 2 OOP Architecture** | ✅ Complete | `BlueprintElement` hierarchy, `Vector3D`, `Material`, `Wall`, `Door`, `Window`, `Table`, `Chair` |
+| **OpenCV Vision Pipeline** | ✅ Complete | `src/vision/` modular CV extractor for raster floor plans (PNG/JPG) with door arc auto-scale |
+| **Lane 2 OOP Architecture** | ✅ Complete | `BlueprintElement` hierarchy, `Vector3D`, `Material`, `Wall`, `Door`, `Window`, `Floor`, `Table`, `Chair` |
 | **Lane 2 Parser & Heuristics** | ✅ Complete | Polymorphic JSON/CSV parser with dimensional aspect-ratio heuristic classifier |
-| **Lane 2 Exporter & CLI** | ✅ Complete | Spatial unit normalizer (mm $\rightarrow$ m), bounding-box calculator, `src/main.py` CLI |
-| **Lane 3 Contract & Fixtures**| ✅ Complete | `schemas/lane3_output_schema.json`, `fixtures/sample_output.json` (unblocking Lane 3 member) |
-| **Testing & Quality Assurance** | ✅ Complete | Automated test suite verifying data integrity and polymorphism |
-| **Lane 3 Implementation** | 🔄 In Progress | Assigned to Lane 3 team member |
+| **Lane 2 Exporter & CLI** | ✅ Complete | Spatial unit normalizer (mm $\rightarrow$ m), bounding-box calculator, `src/main.py`, `src/pipeline.py` |
+| **Lane 3 3D Visualization** | ✅ Complete | Interactive Three.js WebGL viewer with room layers, raycast inspector, and Blender `bpy` script |
+| **Testing & Quality Assurance** | ✅ Complete | 30 automated tests passing across geometry, CAD extraction, OOP models, and CV pipeline |
+

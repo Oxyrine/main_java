@@ -9,6 +9,7 @@ from src.models import (
     BlueprintElement,
     Chair,
     Door,
+    Floor,
     GenericFurniture,
     Table,
     Vector3D,
@@ -32,6 +33,8 @@ class BlueprintParser:
         "doors": Door,
         "window": Window,
         "windows": Window,
+        "floor": Floor,
+        "floors": Floor,
         "table": Table,
         "desk": Table,
         "chair": Chair,
@@ -186,8 +189,8 @@ class BlueprintParser:
 
         return elements
 
-    def parse_file(self, file_path: Union[str, Path]) -> List[BlueprintElement]:
-        """Automatic file detection and parsing (JSON, CSV, or DXF)."""
+    def parse_file(self, file_path: Union[str, Path], vision_config: Optional[Any] = None) -> List[BlueprintElement]:
+        """Automatic file detection and parsing (JSON, CSV, DXF, or Image)."""
         path = Path(file_path)
         if not path.exists():
             raise FileNotFoundError(f"Input file not found: {path}")
@@ -197,12 +200,12 @@ class BlueprintParser:
             with open(path, "r", encoding="utf-8") as f:
                 data = json.load(f)
             return self.parse_json_dict(data)
-        elif suffix == ".dxf":
+        elif suffix in [".dxf", ".png", ".jpg", ".jpeg", ".bmp", ".webp"]:
             from src.extraction import CadExtractor
             extractor = CadExtractor(units=self.default_units)
-            extracted = extractor.extract_file(path)
+            extracted = extractor.extract_file(path, vision_config=vision_config)
             return self.parse_json_dict(extracted)
         elif suffix in [".csv", ".txt"]:
             return self.parse_csv_file(path)
         else:
-            raise ValueError(f"Unsupported file format: {suffix}. Supported: .json, .csv, .dxf")
+            raise ValueError(f"Unsupported file format: {suffix}. Supported: .json, .csv, .dxf, .png, .jpg")

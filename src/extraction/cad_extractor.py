@@ -246,13 +246,40 @@ class CadExtractor:
 
         return None
 
-    def extract_file(self, file_path: Union[str, Path]) -> Dict[str, Any]:
-        """Extracts elements from a DXF file on disk."""
+    def extract_image(
+        self,
+        image_path: Union[str, Path],
+        building_width_mm: float = 12000.0,
+        vision_config: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        """
+        Extracts walls, rooms, openings, and scale from a 2D raster floor plan image (PNG/JPG).
+        Delegates to the OpenCV-based FloorPlanVisionExtractor pipeline.
+        """
+        from src.vision.config import VisionConfig
+        from src.vision.floorplan_vision import FloorPlanVisionExtractor
+
+        cfg = vision_config
+        if cfg is None:
+            cfg = VisionConfig(known_width_mm=building_width_mm)
+        extractor = FloorPlanVisionExtractor(config=cfg)
+        return extractor.extract(image_path, config=cfg)
+
+    def extract_file(
+        self,
+        file_path: Union[str, Path],
+        vision_config: Optional[Any] = None,
+    ) -> Dict[str, Any]:
+        """Extracts elements from a DXF or Image file on disk."""
         path = Path(file_path)
         if not path.exists():
-            raise FileNotFoundError(f"CAD file not found: {path}")
+            raise FileNotFoundError(f"CAD/Blueprint file not found: {path}")
 
-        # Try reading as UTF-8 or fallback to latin-1
+        suffix = path.suffix.lower()
+        if suffix in [".png", ".jpg", ".jpeg", ".bmp", ".webp"]:
+            return self.extract_image(path, vision_config=vision_config)
+
+        # Try reading as UTF-8 or fallback to latin-1 for DXF
         try:
             with open(path, "r", encoding="utf-8") as f:
                 content = f.read()

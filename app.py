@@ -49,9 +49,10 @@ def convert_blueprint():
     filename = uploaded.filename
     suffix = Path(filename).suffix.lower()
 
-    if suffix not in [".dxf", ".csv", ".json", ".txt"]:
+    ALLOWED_EXTENSIONS = [".dxf", ".csv", ".json", ".txt", ".png", ".jpg", ".jpeg", ".bmp", ".webp"]
+    if suffix not in ALLOWED_EXTENSIONS:
         return jsonify({
-            "error": f"Unsupported file extension '{suffix}'. Supported: .dxf, .csv, .json"
+            "error": f"Unsupported file extension '{suffix}'. Supported: .dxf, .csv, .json, .png, .jpg"
         }), 400
 
     # Save to a temporary file for pipeline processing
@@ -59,8 +60,18 @@ def convert_blueprint():
         temp_path = Path(temp_f.name)
         uploaded.save(temp_path)
 
+    vision_cfg = None
+    if suffix in [".png", ".jpg", ".jpeg", ".bmp", ".webp"]:
+        from src.vision.config import VisionConfig
+        vision_cfg = VisionConfig(
+            mm_per_px=request.form.get("mm_per_px", type=float),
+            known_width_mm=request.form.get("known_width_mm", type=float),
+            free_angle=request.form.get("free_angle", default="false").lower() in ("true", "1", "yes"),
+            enable_ocr=request.form.get("enable_ocr", default="true").lower() in ("true", "1", "yes"),
+        )
+
     try:
-        result = pipeline.process(temp_path)
+        result = pipeline.process(temp_path, vision_config=vision_cfg)
         return jsonify({
             "success": True,
             "filename": filename,
@@ -95,6 +106,24 @@ def get_legacy_cad_scene():
     if legacy_path.exists():
         return send_from_directory(legacy_path.parent, legacy_path.name)
     return jsonify({"error": "Legacy CAD scene not found"}), 404
+
+
+@app.route("/api/residential", methods=["GET"])
+def get_residential_scene():
+    """Returns the 40-element residential vision floor plan scene JSON."""
+    res_path = REPO_ROOT / "fixtures" / "residential_scene.json"
+    if res_path.exists():
+        return send_from_directory(res_path.parent, res_path.name)
+    return jsonify({"error": "Residential scene not found"}), 404
+
+
+@app.route("/api/synthetic", methods=["GET"])
+def get_synthetic_scene():
+    """Returns the 28-element synthetic 3-room floor plan scene JSON."""
+    syn_path = REPO_ROOT / "fixtures" / "synthetic_scene.json"
+    if syn_path.exists():
+        return send_from_directory(syn_path.parent, syn_path.name)
+    return jsonify({"error": "Synthetic scene not found"}), 404
 
 
 if __name__ == "__main__":

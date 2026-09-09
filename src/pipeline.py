@@ -52,6 +52,7 @@ class BlueprintTo3DPipeline:
         input_path: Union[str, Path],
         output_json_path: Optional[Union[str, Path]] = None,
         output_blend_path: Optional[Union[str, Path]] = None,
+        vision_config: Optional[Any] = None,
     ) -> PipelineResult:
         """Executes the full pipeline from raw input to 3D scene output."""
         start_time = datetime.now()
@@ -60,7 +61,7 @@ class BlueprintTo3DPipeline:
             raise FileNotFoundError(f"Input file not found: {path}")
 
         # Stage 1 & Stage 2: Parse into typed OOP domain objects
-        elements: List[BlueprintElement] = self.parser.parse_file(path)
+        elements: List[BlueprintElement] = self.parser.parse_file(path, vision_config=vision_config)
 
         # Compute breakdown
         type_counts: Dict[str, int] = {}
@@ -106,7 +107,7 @@ def main() -> int:
         "-i", "--input",
         type=str,
         required=True,
-        help="Input blueprint file (.dxf, .csv, or .json)",
+        help="Input blueprint file (.dxf, .csv, .json, or .png/.jpg)",
     )
     parser.add_argument(
         "-o", "--output",
@@ -120,8 +121,48 @@ def main() -> int:
         default=None,
         help="Optional path to output Blender .blend file (requires Blender bpy)",
     )
+    # Vision pipeline options
+    parser.add_argument(
+        "--mm-per-px",
+        type=float,
+        default=None,
+        help="Explicit scale override (millimeters per pixel) for image input",
+    )
+    parser.add_argument(
+        "--known-width-mm",
+        type=float,
+        default=None,
+        help="Known building width in mm for image scale calibration",
+    )
+    parser.add_argument(
+        "--free-angle",
+        action="store_true",
+        default=False,
+        help="Disable Manhattan orthogonal snapping for angled floor-plan drawings",
+    )
+    parser.add_argument(
+        "--no-ocr",
+        action="store_true",
+        default=False,
+        help="Disable Tesseract OCR room labeling",
+    )
+    parser.add_argument(
+        "--debug-overlay",
+        type=str,
+        default=None,
+        help="Output file path for CV debug visualization overlay image",
+    )
 
     args = parser.parse_args()
+
+    from src.vision.config import VisionConfig
+    vision_cfg = VisionConfig(
+        mm_per_px=args.mm_per_px,
+        known_width_mm=args.known_width_mm,
+        free_angle=args.free_angle,
+        enable_ocr=not args.no_ocr,
+        debug_overlay_path=args.debug_overlay,
+    )
 
     pipeline = BlueprintTo3DPipeline()
     print("=" * 65)
@@ -130,7 +171,7 @@ def main() -> int:
     print(f"Processing input : {args.input}")
 
     try:
-        res = pipeline.process(args.input, args.output, args.blend)
+        res = pipeline.process(args.input, args.output, args.blend, vision_config=vision_cfg)
     except Exception as e:
         print(f"Pipeline error: {e}", file=sys.stderr)
         return 1

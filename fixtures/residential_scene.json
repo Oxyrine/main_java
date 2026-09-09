@@ -1,0 +1,1955 @@
+{
+  "format_version": "1.0.0",
+  "scene_metadata": {
+    "generator": "Lane2-OOP-Model",
+    "generated_at": "2026-09-09T15:13:04.223270+00:00",
+    "target_units": "m",
+    "element_count": 40,
+    "scene_bounds": {
+      "min": [
+        1.155,
+        -0.001,
+        0.0
+      ],
+      "max": [
+        13.275,
+        12.131,
+        2.8
+      ]
+    }
+  },
+  "objects": [
+    {
+      "id": "wall_001",
+      "name": "Wall_wall_001",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 4.6341,
+          "depth": 0.2,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 3.6046,
+          "y": 12.0305,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "horizontal",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_001"
+      }
+    },
+    {
+      "id": "wall_002",
+      "name": "Wall_wall_002",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.8956,
+          "depth": 0.2,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 7.5901,
+          "y": 11.9984,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "horizontal",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_002"
+      }
+    },
+    {
+      "id": "wall_003",
+      "name": "Wall_wall_003",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.705,
+          "depth": 0.2,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 12.8694,
+          "y": 11.9984,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "horizontal",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_003"
+      }
+    },
+    {
+      "id": "wall_004",
+      "name": "Wall_wall_004",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 2.8081,
+          "depth": 0.2193,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 5.5163,
+          "y": 10.1201,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "horizontal",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_004"
+      }
+    },
+    {
+      "id": "wall_005",
+      "name": "Wall_wall_005",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.4382,
+          "depth": 0.2193,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 2.0067,
+          "y": 7.8407,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "horizontal",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_005"
+      }
+    },
+    {
+      "id": "wall_006",
+      "name": "Wall_wall_006",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.3394,
+          "depth": 0.2,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 4.782,
+          "y": 7.8055,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "horizontal",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_006"
+      }
+    },
+    {
+      "id": "wall_007",
+      "name": "Wall_wall_007",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 3.9291,
+          "depth": 0.2193,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 3.2522,
+          "y": 5.2257,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "horizontal",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_007"
+      }
+    },
+    {
+      "id": "wall_008",
+      "name": "Wall_wall_008",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.7206,
+          "depth": 0.2193,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 6.9869,
+          "y": 5.2257,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "horizontal",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_008"
+      }
+    },
+    {
+      "id": "wall_009",
+      "name": "Wall_wall_009",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 4.3864,
+          "depth": 0.2193,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 10.9504,
+          "y": 5.2257,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "horizontal",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_009"
+      }
+    },
+    {
+      "id": "wall_010",
+      "name": "Wall_wall_010",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 2.7385,
+          "depth": 0.2,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 2.6569,
+          "y": 0.1067,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "horizontal",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_010"
+      }
+    },
+    {
+      "id": "wall_011",
+      "name": "Wall_wall_011",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.6292,
+          "depth": 0.2193,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 6.7989,
+          "y": 0.135,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "horizontal",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_011"
+      }
+    },
+    {
+      "id": "wall_012",
+      "name": "Wall_wall_012",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 3.5875,
+          "depth": 0.2,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 11.3499,
+          "y": 0.0988,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "horizontal",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_012"
+      }
+    },
+    {
+      "id": "wall_013",
+      "name": "Wall_wall_013",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2,
+          "depth": 4.4789,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 1.2548,
+          "y": 9.759,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "vertical",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_013"
+      }
+    },
+    {
+      "id": "wall_014",
+      "name": "Wall_wall_014",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2,
+          "depth": 5.9747,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 1.2626,
+          "y": 3.1223,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "vertical",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_014"
+      }
+    },
+    {
+      "id": "wall_015",
+      "name": "Wall_wall_015",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2193,
+          "depth": 2.6084,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 4.1162,
+          "y": 9.1449,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "vertical",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_015"
+      }
+    },
+    {
+      "id": "wall_016",
+      "name": "Wall_wall_016",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2,
+          "depth": 4.2282,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 6.9204,
+          "y": 9.8843,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "vertical",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_016"
+      }
+    },
+    {
+      "id": "wall_017",
+      "name": "Wall_wall_017",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2,
+          "depth": 5.0908,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 6.9204,
+          "y": 2.6804,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "InteriorWallMaterial",
+        "color": [
+          0.92,
+          0.92,
+          0.9,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": false,
+        "orientation": "vertical",
+        "layer": "A-WALL-INTR",
+        "raw_id": "wall_017"
+      }
+    },
+    {
+      "id": "wall_018",
+      "name": "Wall_wall_018",
+      "category": "architectural",
+      "type": "wall",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2,
+          "depth": 9.5622,
+          "height": 2.8
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 13.1749,
+          "y": 4.9161,
+          "z": 1.4
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "ExteriorWallMaterial",
+        "color": [
+          0.82,
+          0.82,
+          0.8,
+          1.0
+        ],
+        "roughness": 0.75,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "exterior": true,
+        "orientation": "vertical",
+        "layer": "A-WALL-EXTR",
+        "raw_id": "wall_018"
+      }
+    },
+    {
+      "id": "window_019",
+      "name": "Window_window_019",
+      "category": "architectural",
+      "type": "window",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.7206,
+          "depth": 0.2,
+          "height": 1.2
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 6.282,
+          "y": 12.0091,
+          "z": 1.5
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "GlassMaterial",
+        "color": [
+          0.6,
+          0.8,
+          0.9,
+          0.4
+        ],
+        "roughness": 0.1,
+        "metallic": 0.1
+      },
+      "metadata": {
+        "exterior": true,
+        "swing_radius_mm": null,
+        "layer": "A-GLAZ",
+        "raw_id": "window_019"
+      }
+    },
+    {
+      "id": "window_020",
+      "name": "Window_window_020",
+      "category": "architectural",
+      "type": "window",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 3.9791,
+          "depth": 0.2,
+          "height": 1.2
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 10.5274,
+          "y": 12.0091,
+          "z": 1.5
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "GlassMaterial",
+        "color": [
+          0.6,
+          0.8,
+          0.9,
+          0.4
+        ],
+        "roughness": 0.1,
+        "metallic": 0.1
+      },
+      "metadata": {
+        "exterior": true,
+        "swing_radius_mm": null,
+        "layer": "A-GLAZ",
+        "raw_id": "window_020"
+      }
+    },
+    {
+      "id": "door_021",
+      "name": "Door_door_021",
+      "category": "architectural",
+      "type": "door",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.3864,
+          "depth": 0.2,
+          "height": 2.1
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 3.4191,
+          "y": 7.8231,
+          "z": 1.05
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "WoodDoorMaterial",
+        "color": [
+          0.55,
+          0.35,
+          0.2,
+          1.0
+        ],
+        "roughness": 0.45,
+        "metallic": 0.05
+      },
+      "metadata": {
+        "exterior": false,
+        "swing_radius_mm": null,
+        "layer": "A-DOOR",
+        "raw_id": "door_021"
+      }
+    },
+    {
+      "id": "door_022",
+      "name": "Door_door_022",
+      "category": "architectural",
+      "type": "door",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.4099,
+          "depth": 0.2,
+          "height": 2.1
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 5.9217,
+          "y": 5.2257,
+          "z": 1.05
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "WoodDoorMaterial",
+        "color": [
+          0.55,
+          0.35,
+          0.2,
+          1.0
+        ],
+        "roughness": 0.45,
+        "metallic": 0.05
+      },
+      "metadata": {
+        "exterior": false,
+        "swing_radius_mm": 783.29,
+        "layer": "A-DOOR",
+        "raw_id": "door_022"
+      }
+    },
+    {
+      "id": "door_023",
+      "name": "Door_door_023",
+      "category": "architectural",
+      "type": "door",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.4099,
+          "depth": 0.2,
+          "height": 2.1
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 8.0522,
+          "y": 5.2257,
+          "z": 1.05
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "WoodDoorMaterial",
+        "color": [
+          0.55,
+          0.35,
+          0.2,
+          1.0
+        ],
+        "roughness": 0.45,
+        "metallic": 0.05
+      },
+      "metadata": {
+        "exterior": false,
+        "swing_radius_mm": 939.95,
+        "layer": "A-DOOR",
+        "raw_id": "door_023"
+      }
+    },
+    {
+      "id": "window_024",
+      "name": "Window_window_024",
+      "category": "architectural",
+      "type": "window",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.9582,
+          "depth": 0.2,
+          "height": 1.2
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 5.0052,
+          "y": 0.1135,
+          "z": 1.5
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "GlassMaterial",
+        "color": [
+          0.6,
+          0.8,
+          0.9,
+          0.4
+        ],
+        "roughness": 0.1,
+        "metallic": 0.1
+      },
+      "metadata": {
+        "exterior": true,
+        "swing_radius_mm": null,
+        "layer": "A-GLAZ",
+        "raw_id": "window_024"
+      }
+    },
+    {
+      "id": "window_025",
+      "name": "Window_window_025",
+      "category": "architectural",
+      "type": "window",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.9426,
+          "depth": 0.2,
+          "height": 1.2
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 8.5849,
+          "y": 0.1135,
+          "z": 1.5
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "GlassMaterial",
+        "color": [
+          0.6,
+          0.8,
+          0.9,
+          0.4
+        ],
+        "roughness": 0.1,
+        "metallic": 0.1
+      },
+      "metadata": {
+        "exterior": true,
+        "swing_radius_mm": null,
+        "layer": "A-GLAZ",
+        "raw_id": "window_025"
+      }
+    },
+    {
+      "id": "door_026",
+      "name": "Door_door_026",
+      "category": "architectural",
+      "type": "door",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2,
+          "depth": 1.4099,
+          "height": 2.1
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 1.2587,
+          "y": 6.8146,
+          "z": 1.05
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "WoodDoorMaterial",
+        "color": [
+          0.55,
+          0.35,
+          0.2,
+          1.0
+        ],
+        "roughness": 0.45,
+        "metallic": 0.05
+      },
+      "metadata": {
+        "exterior": true,
+        "swing_radius_mm": 1425.59,
+        "layer": "A-DOOR",
+        "raw_id": "door_026"
+      }
+    },
+    {
+      "id": "door_027",
+      "name": "Door_door_027",
+      "category": "architectural",
+      "type": "door",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2,
+          "depth": 2.5445,
+          "height": 2.1
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 6.9204,
+          "y": 6.498,
+          "z": 1.05
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "WoodDoorMaterial",
+        "color": [
+          0.55,
+          0.35,
+          0.2,
+          1.0
+        ],
+        "roughness": 0.45,
+        "metallic": 0.05
+      },
+      "metadata": {
+        "exterior": false,
+        "swing_radius_mm": null,
+        "layer": "A-DOOR",
+        "raw_id": "door_027"
+      }
+    },
+    {
+      "id": "window_028",
+      "name": "Window_window_028",
+      "category": "architectural",
+      "type": "window",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.2,
+          "depth": 2.3013,
+          "height": 1.2
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 13.1749,
+          "y": 10.8478,
+          "z": 1.5
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "GlassMaterial",
+        "color": [
+          0.6,
+          0.8,
+          0.9,
+          0.4
+        ],
+        "roughness": 0.1,
+        "metallic": 0.1
+      },
+      "metadata": {
+        "exterior": true,
+        "swing_radius_mm": null,
+        "layer": "A-GLAZ",
+        "raw_id": "window_028"
+      }
+    },
+    {
+      "id": "floor_029",
+      "name": "Floor_floor_029",
+      "category": "architectural",
+      "type": "floor",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 2.6162,
+          "depth": 3.9321,
+          "height": 0.05
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 2.6867,
+          "y": 9.9243,
+          "z": 0.025
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "FloorMaterial_Utility",
+        "color": [
+          0.75,
+          0.82,
+          0.85,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.02
+      },
+      "metadata": {
+        "room_id": "room_001",
+        "room_type": "utility",
+        "label": "PH/KHH",
+        "area_m2": 10.15,
+        "layer": "A-FLOR",
+        "raw_id": "floor_029"
+      }
+    },
+    {
+      "id": "floor_030",
+      "name": "Floor_floor_030",
+      "category": "architectural",
+      "type": "floor",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 2.5379,
+          "depth": 1.6136,
+          "height": 0.05
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 5.53,
+          "y": 11.0679,
+          "z": 0.025
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "FloorMaterial_Sauna",
+        "color": [
+          0.82,
+          0.6,
+          0.35,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.02
+      },
+      "metadata": {
+        "room_id": "room_002",
+        "room_type": "sauna",
+        "label": "Sauna",
+        "area_m2": 4.08,
+        "layer": "A-FLOR",
+        "raw_id": "floor_030"
+      }
+    },
+    {
+      "id": "table_031",
+      "name": "Table_table_031",
+      "category": "furniture",
+      "type": "table",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.6,
+          "depth": 1.0,
+          "height": 0.45
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 5.5212,
+          "y": 11.0735,
+          "z": 0.225
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "TableMaterial",
+        "color": [
+          0.4,
+          0.25,
+          0.15,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "room_type": "sauna",
+        "furniture_type": "bench",
+        "layer": "I-FURN-BNCH",
+        "raw_id": "table_031"
+      }
+    },
+    {
+      "id": "floor_032",
+      "name": "Floor_floor_032",
+      "category": "architectural",
+      "type": "floor",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 5.9843,
+          "depth": 6.5013,
+          "height": 0.05
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 10.0574,
+          "y": 8.6084,
+          "z": 0.025
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "FloorMaterial_Living",
+        "color": [
+          0.85,
+          0.82,
+          0.78,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.02
+      },
+      "metadata": {
+        "room_id": "room_003",
+        "room_type": "living",
+        "label": "OH / K",
+        "area_m2": 38.76,
+        "layer": "A-FLOR",
+        "raw_id": "floor_032"
+      }
+    },
+    {
+      "id": "table_033",
+      "name": "Table_table_033",
+      "category": "furniture",
+      "type": "table",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.2,
+          "depth": 0.8,
+          "height": 0.75
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 10.0427,
+          "y": 8.623,
+          "z": 0.375
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "TableMaterial",
+        "color": [
+          0.4,
+          0.25,
+          0.15,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "room_type": "living",
+        "layer": "I-FURN-TABL",
+        "raw_id": "table_033"
+      }
+    },
+    {
+      "id": "chair_034",
+      "name": "Chair_chair_034",
+      "category": "furniture",
+      "type": "chair",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 0.5,
+          "depth": 0.5,
+          "height": 0.9
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 10.9926,
+          "y": 8.623,
+          "z": 0.45
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 180.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "FabricChairMaterial",
+        "color": [
+          0.2,
+          0.3,
+          0.5,
+          1.0
+        ],
+        "roughness": 0.8,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "room_type": "living",
+        "layer": "I-FURN-CHAI",
+        "raw_id": "chair_034"
+      }
+    },
+    {
+      "id": "floor_035",
+      "name": "Floor_floor_035",
+      "category": "architectural",
+      "type": "floor",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 2.5379,
+          "depth": 2.0366,
+          "height": 0.05
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 5.53,
+          "y": 8.9452,
+          "z": 0.025
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "FloorMaterial_Bathroom",
+        "color": [
+          0.72,
+          0.82,
+          0.88,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.02
+      },
+      "metadata": {
+        "room_id": "room_004",
+        "room_type": "bathroom",
+        "label": "WC",
+        "area_m2": 5.14,
+        "layer": "A-FLOR",
+        "raw_id": "floor_035"
+      }
+    },
+    {
+      "id": "floor_036",
+      "name": "Floor_floor_036",
+      "category": "architectural",
+      "type": "floor",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 5.4047,
+          "depth": 2.3185,
+          "height": 0.05
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 4.0966,
+          "y": 6.517,
+          "z": 0.025
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "FloorMaterial_Entry",
+        "color": [
+          0.78,
+          0.76,
+          0.74,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.02
+      },
+      "metadata": {
+        "room_id": "room_005",
+        "room_type": "entry",
+        "label": "ET",
+        "area_m2": 12.38,
+        "layer": "A-FLOR",
+        "raw_id": "floor_036"
+      }
+    },
+    {
+      "id": "floor_037",
+      "name": "Floor_floor_037",
+      "category": "architectural",
+      "type": "floor",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 5.4204,
+          "depth": 4.8877,
+          "height": 0.05
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 4.0888,
+          "y": 2.6475,
+          "z": 0.025
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "FloorMaterial_Bedroom",
+        "color": [
+          0.82,
+          0.84,
+          0.88,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.02
+      },
+      "metadata": {
+        "room_id": "room_006",
+        "room_type": "bedroom",
+        "label": "MH 6",
+        "area_m2": 26.09,
+        "layer": "A-FLOR",
+        "raw_id": "floor_037"
+      }
+    },
+    {
+      "id": "table_038",
+      "name": "Table_table_038",
+      "category": "furniture",
+      "type": "table",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.6,
+          "depth": 2.0,
+          "height": 0.55
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 4.0863,
+          "y": 2.6692,
+          "z": 0.275
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "TableMaterial",
+        "color": [
+          0.4,
+          0.25,
+          0.15,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "room_type": "bedroom",
+        "furniture_type": "bed",
+        "layer": "I-FURN-BED",
+        "raw_id": "table_038"
+      }
+    },
+    {
+      "id": "floor_039",
+      "name": "Floor_floor_039",
+      "category": "architectural",
+      "type": "floor",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 6.0157,
+          "depth": 4.8877,
+          "height": 0.05
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 10.0731,
+          "y": 2.6475,
+          "z": 0.025
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "FloorMaterial_Bedroom",
+        "color": [
+          0.82,
+          0.84,
+          0.88,
+          1.0
+        ],
+        "roughness": 0.5,
+        "metallic": 0.02
+      },
+      "metadata": {
+        "room_id": "room_007",
+        "room_type": "bedroom",
+        "label": "MH 7",
+        "area_m2": 29.05,
+        "layer": "A-FLOR",
+        "raw_id": "floor_039"
+      }
+    },
+    {
+      "id": "table_040",
+      "name": "Table_table_040",
+      "category": "furniture",
+      "type": "table",
+      "geometry": {
+        "primitive": "box",
+        "dimensions": {
+          "width": 1.6,
+          "depth": 2.0,
+          "height": 0.55
+        }
+      },
+      "transform": {
+        "translation": {
+          "x": 10.0616,
+          "y": 2.6634,
+          "z": 0.275
+        },
+        "rotation": {
+          "x": 0.0,
+          "y": 0.0,
+          "z": 0.0
+        },
+        "scale": {
+          "x": 1.0,
+          "y": 1.0,
+          "z": 1.0
+        }
+      },
+      "material": {
+        "name": "TableMaterial",
+        "color": [
+          0.4,
+          0.25,
+          0.15,
+          1.0
+        ],
+        "roughness": 0.6,
+        "metallic": 0.0
+      },
+      "metadata": {
+        "room_type": "bedroom",
+        "furniture_type": "bed",
+        "layer": "I-FURN-BED",
+        "raw_id": "table_040"
+      }
+    }
+  ]
+}
