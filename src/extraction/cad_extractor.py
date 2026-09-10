@@ -49,12 +49,16 @@ class CadExtractor:
     def __init__(self, units: str = "mm") -> None:
         self.units = units
 
-    def classify_layer(self, layer_name: str, entity_name: str = "") -> str:
+    def classify_layer(self, layer_name: str, entity_name: str = "", entity_type: str = "") -> str:
         """Classifies element type based on CAD layer name or entity/block name."""
         combined = f"{layer_name} {entity_name}".lower()
         for key, elem_type in self.LAYER_TYPE_MAP.items():
             if key in combined:
                 return elem_type
+        # If entity is a linear or polyline geometric entity (LINE, LWPOLYLINE, POLYLINE),
+        # and the layer is generic (e.g. "0", "Defpoints", "Plan"), default to "wall"
+        if entity_type.upper() in ["LINE", "LWPOLYLINE", "POLYLINE", "ARC"]:
+            return "wall"
         return "furniture"
 
     def _parse_dxf_tag_pairs(self, text: str) -> List[Tuple[int, str]]:
@@ -78,6 +82,18 @@ class CadExtractor:
         pairs = self._parse_dxf_tag_pairs(dxf_content)
         elements: List[Dict[str, Any]] = []
 
+        # Auto-detect coordinate units:
+        # Scan coordinate values to determine if the drawing is in meters (< 150) or millimeters
+        coord_vals = []
+        for code, val in pairs:
+            if code in (10, 11, 20, 21):
+                try:
+                    coord_vals.append(abs(float(val)))
+                except ValueError:
+                    pass
+        max_coord = max(coord_vals) if coord_vals else 1000.0
+        unit_mult = 1000.0 if (0.0 < max_coord < 150.0) else 1.0
+
         in_entities_section = False
         i = 0
         n = len(pairs)
@@ -99,16 +115,46 @@ class CadExtractor:
                 entity_type = val.upper()
                 entity_tags: Dict[int, List[str]] = {}
                 i += 1
-                while i < n and pairs[i][0] != 0:
-                    c_tag, v_tag = pairs[i]
-                    entity_tags.setdefault(c_tag, []).append(v_tag)
-                    i += 1
+
+                if entity_type == "POLYLINE":
+                    # Traditional AutoCAD POLYLINE with child VERTEX entities
+                    while i < n and pairs[i] != (0, "SEQEND") and pairs[i][0] != 0:
+                        c_tag, v_tag = pairs[i]
+                        entity_tags.setdefault(c_tag, []).append(v_tag)
+                        i += 1
+                    vx, vy = [], []
+                    while i < n and pairs[i] != (0, "SEQEND"):
+                        if pairs[i] == (0, "VERTEX"):
+                            i += 1
+                            v_tags: Dict[int, List[str]] = {}
+                            while i < n and pairs[i][0] != 0:
+                                v_tags.setdefault(pairs[i][0], []).append(pairs[i][1])
+                                i += 1
+                            if 10 in v_tags and 20 in v_tags:
+                                vx.append(float(v_tags[10][0]))
+                                vy.append(float(v_tags[20][0]))
+                        else:
+                            i += 1
+                    if i < n and pairs[i] == (0, "SEQEND"):
+                        i += 1
+                    entity_tags[10] = [str(x) for x in vx]
+                    entity_tags[20] = [str(y) for y in vy]
+                    entity_type = "LWPOLYLINE"
+                else:
+                    while i < n and pairs[i][0] != 0:
+                        c_tag, v_tag = pairs[i]
+                        entity_tags.setdefault(c_tag, []).append(v_tag)
+                        i += 1
 
                 # Process specific CAD entities
-                parsed_elem = self._convert_entity(entity_type, entity_tags, entity_count + 1)
+                parsed_elem = self._convert_entity(entity_type, entity_tags, entity_count + 1, unit_mult=unit_mult)
                 if parsed_elem:
-                    elements.append(parsed_elem)
-                    entity_count += 1
+                    if isinstance(parsed_elem, list):
+                        elements.extend(parsed_elem)
+                        entity_count += len(parsed_elem)
+                    else:
+                        elements.append(parsed_elem)
+                        entity_count += 1
                 continue
 
             i += 1
@@ -125,29 +171,29 @@ class CadExtractor:
         }
 
     def _convert_entity(
-        self, entity_type: str, tags: Dict[int, List[str]], elem_idx: int
-    ) -> Optional[Dict[str, Any]]:
-        """Converts raw DXF entity tags into a standardized BlueprintElement record."""
+        self, entity_type: str, tags: Dict[int, List[str]], elem_idx: int, unit_mult: float = 1.0
+    ) -> Optional[Union[Dict[str, Any], List[Dict[str, Any]]]]:
+        """Converts raw DXF entity tags into standardized BlueprintElement records."""
         layer = tags.get(8, ["0"])[0]
 
         if entity_type == "LINE":
             # LINE endpoints: (10,20,30) and (11,21,31)
-            x1 = float(tags.get(10, [0.0])[0])
-            y1 = float(tags.get(20, [0.0])[0])
-            z1 = float(tags.get(30, [0.0])[0])
+            x1 = float(tags.get(10, [0.0])[0]) * unit_mult
+            y1 = float(tags.get(20, [0.0])[0]) * unit_mult
+            z1 = float(tags.get(30, [0.0])[0]) * unit_mult
 
-            x2 = float(tags.get(11, [0.0])[0])
-            y2 = float(tags.get(21, [0.0])[0])
-            z2 = float(tags.get(31, [0.0])[0])
+            x2 = float(tags.get(11, [0.0])[0]) * unit_mult
+            y2 = float(tags.get(21, [0.0])[0]) * unit_mult
+            z2 = float(tags.get(31, [0.0])[0]) * unit_mult
 
             dx = x2 - x1
             dy = y2 - y1
-            length = math.sqrt(dx * dx + dy * dy)
-            if length < 1e-4:
+            length = math.hypot(dx, dy)
+            if length < 1.0:
                 return None
 
             angle_deg = math.degrees(math.atan2(dy, dx))
-            elem_type = self.classify_layer(layer)
+            elem_type = self.classify_layer(layer, entity_type="LINE")
 
             # Determine thickness and height based on type
             if elem_type == "wall":
@@ -179,16 +225,16 @@ class CadExtractor:
         elif entity_type in ["INSERT", "BLOCK"]:
             # Block insertions (doors, windows, furniture symbols)
             block_name = tags.get(2, ["unknown"])[0]
-            x = float(tags.get(10, [0.0])[0])
-            y = float(tags.get(20, [0.0])[0])
-            z = float(tags.get(30, [0.0])[0])
+            x = float(tags.get(10, [0.0])[0]) * unit_mult
+            y = float(tags.get(20, [0.0])[0]) * unit_mult
+            z = float(tags.get(30, [0.0])[0]) * unit_mult
 
             sx = float(tags.get(41, [1.0])[0])
             sy = float(tags.get(42, [1.0])[0])
             sz = float(tags.get(43, [1.0])[0])
             rot = float(tags.get(50, [0.0])[0])
 
-            elem_type = self.classify_layer(layer, block_name)
+            elem_type = self.classify_layer(layer, entity_name=block_name, entity_type="INSERT")
 
             # Assign typical physical dimensions if block scale is nominal (e.g. 1.0)
             if abs(sx) <= 2.0 and abs(sy) <= 2.0:
@@ -203,7 +249,7 @@ class CadExtractor:
                 else:
                     dims = (600.0, 600.0, 600.0)
             else:
-                dims = (abs(sx), abs(sy), abs(sz) if abs(sz) > 10.0 else 800.0)
+                dims = (abs(sx) * unit_mult, abs(sy) * unit_mult, abs(sz) * unit_mult if abs(sz) > 10.0 else 800.0)
 
             return {
                 "id": f"{elem_type}_{elem_idx:03d}",
@@ -219,30 +265,52 @@ class CadExtractor:
             }
 
         elif entity_type == "LWPOLYLINE":
-            # Polyline segments
-            xs = [float(v) for v in tags.get(10, [])]
-            ys = [float(v) for v in tags.get(20, [])]
+            # Polyline segments: break into individual wall segments connecting consecutive vertices
+            xs = [float(v) * unit_mult for v in tags.get(10, [])]
+            ys = [float(v) * unit_mult for v in tags.get(20, [])]
+            flags = int(tags.get(70, [0])[0]) if tags.get(70) else 0
+            is_closed = bool(flags & 1)
 
-            if len(xs) >= 2 and len(ys) >= 2:
-                min_x, max_x = min(xs), max(xs)
-                min_y, max_y = min(ys), max(ys)
-                width = max(max_x - min_x, 100.0)
-                depth = max(max_y - min_y, 100.0)
-                elem_type = self.classify_layer(layer)
-                height = self.DEFAULT_WALL_HEIGHT if elem_type == "wall" else 800.0
+            elem_type = self.classify_layer(layer, entity_type="LWPOLYLINE")
+            thickness = self.DEFAULT_WALL_THICKNESS if elem_type == "wall" else (
+                self.DEFAULT_WALL_THICKNESS if elem_type in ["door", "window"] else 100.0
+            )
+            height = self.DEFAULT_WALL_HEIGHT if elem_type == "wall" else (
+                self.DEFAULT_DOOR_HEIGHT if elem_type == "door" else (
+                    self.DEFAULT_WINDOW_HEIGHT if elem_type == "window" else 800.0
+                )
+            )
 
-                return {
-                    "id": f"{elem_type}_{elem_idx:03d}",
-                    "type": elem_type,
-                    "position": {"x": round(min_x, 2), "y": round(min_y, 2), "z": 0.0},
-                    "scale": {"x": round(width, 2), "y": round(depth, 2), "z": round(height, 2)},
-                    "rotation": {"x": 0.0, "y": 0.0, "z": 0.0},
-                    "properties": {
-                        "layer": layer,
-                        "cad_entity": "LWPOLYLINE",
-                        "vertex_count": len(xs),
-                    },
-                }
+            poly_elems: List[Dict[str, Any]] = []
+            num_pts = min(len(xs), len(ys))
+            if num_pts >= 2:
+                indices = list(range(num_pts - 1))
+                if is_closed and num_pts > 2:
+                    indices.append(num_pts - 1)
+
+                for sub_idx in indices:
+                    next_idx = (sub_idx + 1) % num_pts
+                    x1, y1 = xs[sub_idx], ys[sub_idx]
+                    x2, y2 = xs[next_idx], ys[next_idx]
+                    dx = x2 - x1
+                    dy = y2 - y1
+                    length = math.hypot(dx, dy)
+                    if length < 1.0:
+                        continue
+                    angle_deg = math.degrees(math.atan2(dy, dx))
+                    poly_elems.append({
+                        "id": f"{elem_type}_{elem_idx + len(poly_elems):03d}",
+                        "type": elem_type,
+                        "position": {"x": round(x1, 2), "y": round(y1, 2), "z": 0.0},
+                        "scale": {"x": round(length, 2), "y": round(thickness, 2), "z": round(height, 2)},
+                        "rotation": {"x": 0.0, "y": 0.0, "z": round(angle_deg, 2)},
+                        "properties": {
+                            "layer": layer,
+                            "cad_entity": "LWPOLYLINE",
+                            "length": round(length, 2),
+                        },
+                    })
+                return poly_elems
 
         return None
 

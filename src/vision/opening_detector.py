@@ -33,7 +33,7 @@ class Opening:
 class OpeningDetector:
     """Detects door and window gaps along walls and classifies using swing arcs."""
 
-    def __init__(self, min_gap_px: float = 25.0, max_gap_px: float = 300.0):
+    def __init__(self, min_gap_px: float = 20.0, max_gap_px: float = 180.0):
         self.min_gap_px = min_gap_px
         self.max_gap_px = max_gap_px
 
@@ -256,12 +256,21 @@ class OpeningDetector:
                 )
                 opening_idx += 1
             else:
+                # No swing arc detected:
+                # Interior openings up to 95px are doors (standard residential doors ~700-1100mm).
+                # Exterior openings can be doors (up to 95px with opening ink/thresholds) or windows (up to 180px).
                 if not is_ext:
-                    kind = "door"
+                    if 20.0 <= gap_len <= 95.0:
+                        kind = "door"
+                    else:
+                        continue
                 else:
-                    # Exterior openings: standard door widths (75-105px) can be doors (e.g. front entrance)
-                    # Narrow openings (<75px) and wide openings (>105px) are windows
-                    kind = "door" if (75.0 <= gap_len <= 105.0) else "window"
+                    if 20.0 <= gap_len <= 95.0 and self._has_opening_ink(p_start, p_end, thin_mask):
+                        kind = "door"
+                    elif 25.0 <= gap_len <= 180.0:
+                        kind = "window"
+                    else:
+                        continue
                 prefix = "window" if kind == "window" else "door"
                 openings.append(
                     Opening(

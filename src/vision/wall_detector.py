@@ -154,6 +154,60 @@ class WallDetector:
         merged = merge_collinear(snapped_segments, dist_tol=t_est * 0.9, gap_tol=min(25.0, t_est * 1.5))
         snapped_walls = snap_junctions(merged, snap_dist=min(20.0, t_est * 1.2))
 
+        # Filter out isolated wall segments/clusters (e.g. compass arrow, scale bar, legend text)
+        if len(snapped_walls) > 6:
+            n = len(snapped_walls)
+            adj = {i: set() for i in range(n)}
+            tol = min(20.0, t_est * 1.2)
+            for i in range(n):
+                for j in range(i + 1, n):
+                    w1, w2 = snapped_walls[i], snapped_walls[j]
+                    connected = (min(
+                        w1.distance_to_point(w2.p1), w1.distance_to_point(w2.p2),
+                        w2.distance_to_point(w1.p1), w2.distance_to_point(w1.p2)
+                    ) <= tol)
+                    if not connected:
+                        # Check orthogonal crossing intersection with tight bounds
+                        if w1.is_horizontal() and w2.is_vertical():
+                            connected = (
+                                (min(w1.p1.x, w1.p2.x) - 5 <= (w2.p1.x + w2.p2.x) / 2.0 <= max(w1.p1.x, w1.p2.x) + 5)
+                                and (min(w2.p1.y, w2.p2.y) - 5 <= (w1.p1.y + w1.p2.y) / 2.0 <= max(w2.p1.y, w2.p2.y) + 5)
+                            )
+                        elif w1.is_vertical() and w2.is_horizontal():
+                            connected = (
+                                (min(w2.p1.x, w2.p2.x) - 5 <= (w1.p1.x + w1.p2.x) / 2.0 <= max(w2.p1.x, w2.p2.x) + 5)
+                                and (min(w1.p1.y, w1.p2.y) - 5 <= (w2.p1.y + w2.p2.y) / 2.0 <= max(w1.p1.y, w1.p2.y) + 5)
+                            )
+                    if connected:
+                        adj[i].add(j)
+                        adj[j].add(i)
+
+            visited = set()
+            components = []
+            for i in range(n):
+                if i not in visited:
+                    comp = []
+                    q = [i]
+                    visited.add(i)
+                    while q:
+                        curr = q.pop()
+                        comp.append(curr)
+                        for neighbor in adj[curr]:
+                            if neighbor not in visited:
+                                visited.add(neighbor)
+                                q.append(neighbor)
+                    components.append(comp)
+
+            filtered_walls = []
+            for comp in components:
+                c_len = sum(snapped_walls[k].length for k in comp)
+                # Keep real architectural structures; eliminate isolated single stubs (< 70px) like north arrow
+                if len(comp) > 1 or c_len >= 70.0:
+                    for k in comp:
+                        filtered_walls.append(snapped_walls[k])
+            if filtered_walls:
+                snapped_walls = filtered_walls
+
         # 6. Sample local thickness along centerline of each wall
         final_walls: List[Segment] = []
         h, w = dist.shape[:2]

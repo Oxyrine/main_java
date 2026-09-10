@@ -156,6 +156,11 @@ class FloorPlanVisionExtractor:
             t_mm = cfg.default_wall_thickness_mm
 
             if op.kind == "door":
+                # Physical validation: residential doors are 600mm to 2000mm wide (single or double doors).
+                # Gaps wider than 2200mm are open room passages or wall discontinuities; skip solid door leaf.
+                gap_span_mm = (abs(op.p1.x - op.p2.x) if is_horiz else abs(op.p1.y - op.p2.y)) * mm_per_px
+                if gap_span_mm > 2200.0:
+                    continue
                 h_mm = cfg.default_door_height_mm
                 z_pos = 0.0
             else:

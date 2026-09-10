@@ -138,12 +138,23 @@ class BlueprintElement(ABC):
     def get_center_in_world(self, unit_scale: float = 1.0) -> Vector3D:
         """
         Calculate the center position (translation) of the 3D bounding volume.
-        In 3D engines (Blender/Three.js), box primitives are typically centered at origin.
+        In 3D engines (Blender/Three.js), box primitives are typically centered at origin
+        and rotated around their center. We rotate the local half-dimension offset by rotation.z.
         """
+        import math
+        rad_z = math.radians(self.rotation.z)
+        hx = self.scale.x / 2.0
+        hy = self.scale.y / 2.0
+        hz = self.scale.z / 2.0
+
+        # Rotate the local (hx, hy) center vector by rotation.z
+        dx = hx * math.cos(rad_z) - hy * math.sin(rad_z)
+        dy = hx * math.sin(rad_z) + hy * math.cos(rad_z)
+
         return Vector3D(
-            (self.position.x + self.scale.x / 2.0) * unit_scale,
-            (self.position.y + self.scale.y / 2.0) * unit_scale,
-            (self.position.z + self.scale.z / 2.0) * unit_scale,
+            (self.position.x + dx) * unit_scale,
+            (self.position.y + dy) * unit_scale,
+            (self.position.z + hz) * unit_scale,
         )
 
     def to_3d_object(self, unit_scale: float = 1.0) -> Dict[str, Any]:
