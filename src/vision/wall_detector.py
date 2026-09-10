@@ -39,14 +39,17 @@ class WallDetector:
         v_achro = v[achromatic]
 
         # Check for mid-tone grey wall fill peak (V between 80 and 220)
+        # Real architectural walls occupy between 2% and 22% of total drawing area.
+        # If mid-grey exceeds 22%, it represents shaded room floors (e.g. SweetHome3D), not walls.
+        total_px = prepared.working_w * prepared.working_h
         mid_grey = v_achro[(v_achro >= 80) & (v_achro <= 220)]
         has_mid_grey_wall = False
         v_peak = 0.0
 
-        if len(mid_grey) > (prepared.working_w * prepared.working_h * 0.025):
+        if (total_px * 0.02) < len(mid_grey) < (total_px * 0.22):
             hist, bin_edges = np.histogram(mid_grey, bins=28, range=(80, 220))
             peak_idx = int(np.argmax(hist))
-            if hist[peak_idx] > (prepared.working_w * prepared.working_h * 0.015):
+            if hist[peak_idx] > (total_px * 0.015):
                 v_peak = float((bin_edges[peak_idx] + bin_edges[peak_idx + 1]) / 2.0)
                 has_mid_grey_wall = True
 
@@ -59,10 +62,15 @@ class WallDetector:
             ink_mask = wall_ink.astype(np.uint8) * 255
             thin_base = thin_ink.astype(np.uint8) * 255
         else:
-            # Monochrome / dark-ink plan: walls are dark linework
-            ink_mask = ((s < 70) & (v < 215)).astype(np.uint8) * 255
-            if np.mean(v) < 100:
-                ink_mask = ((s < 70) & (v > 100)).astype(np.uint8) * 255
+            # Check if drawing has shaded room floors (> 22% mid-grey)
+            if len(mid_grey) >= (total_px * 0.22):
+                # Walls are the dark boundaries and partition strokes around the floors
+                ink_mask = ((v < 80) | ((s > 15) & (v < 130))).astype(np.uint8) * 255
+            else:
+                # Monochrome / dark-ink plan: walls are dark linework
+                ink_mask = ((s < 70) & (v < 215)).astype(np.uint8) * 255
+                if np.mean(v) < 100:
+                    ink_mask = ((s < 70) & (v > 100)).astype(np.uint8) * 255
             thin_base = ink_mask
 
         # Filter out tiny speckles/hatching components from ink_mask.
@@ -75,19 +83,25 @@ class WallDetector:
                 area = stats[i, cv2.CC_STAT_AREA]
                 w_box = stats[i, cv2.CC_STAT_WIDTH]
                 h_box = stats[i, cv2.CC_STAT_HEIGHT]
-                if area >= 80 and max(w_box, h_box) >= 30:
+                if area >= 60 and max(w_box, h_box) >= 20:
                     filtered_ink[labels == i] = 255
             ink_mask = filtered_ink
 
+        # For drawings with double-line walls (e.g. vintage architectural scans),
+        # parallel thin lines are separated by a small gap (3-8px).
+        # Morphological close bridges the hollow wall gap into solid wall volume.
+        k_bridge = cv2.getStructuringElement(cv2.MORPH_RECT, (5, 5))
+        ink_closed = cv2.morphologyEx(ink_mask, cv2.MORPH_CLOSE, k_bridge)
+
         # 2. Distance Transform to isolate thick walls from thin linework/text
-        dist = cv2.distanceTransform(ink_mask, cv2.DIST_L2, 5)
+        dist = cv2.distanceTransform(ink_closed, cv2.DIST_L2, 5)
 
         # Estimate wall thickness from medial-axis ridge values
         r_est = self._estimate_ridge_radius(dist)
         t_est = max(6.0, r_est * 2.0)
 
-        # Threshold distance transform to keep solid walls
-        thresh_r = max(2.5, r_est * 0.4)
+        # Threshold distance transform: adaptive for thin/double-line vs thick poche walls
+        thresh_r = max(2.0, r_est * 0.35) if dist.max() > 6.0 else 1.2
         wall_mask = (dist >= thresh_r).astype(np.uint8) * 255
 
         # Morphological close to bridge tiny gaps and smooth wall cores
