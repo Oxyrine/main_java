@@ -33,6 +33,12 @@ def static_proxy(path):
     return send_from_directory("viewer", path)
 
 
+@app.route("/samples/<path:filename>")
+def serve_sample(filename):
+    """Serve sample blueprint images for download and testing."""
+    return send_from_directory("samples", filename)
+
+
 @app.route("/api/convert", methods=["POST"])
 def convert_blueprint():
     """
@@ -124,6 +130,33 @@ def get_synthetic_scene():
     if syn_path.exists():
         return send_from_directory(syn_path.parent, syn_path.name)
     return jsonify({"error": "Synthetic scene not found"}), 404
+
+
+@app.route("/api/studio", methods=["GET"])
+def get_studio_scene():
+    """Returns the 29-element studio apartment scene JSON."""
+    p = REPO_ROOT / "fixtures" / "studio_scene.json"
+    if p.exists():
+        return send_from_directory(p.parent, p.name)
+    return jsonify({"error": "Studio scene not found"}), 404
+
+
+@app.route("/api/two-bhk", methods=["GET"])
+def get_two_bhk_scene():
+    """Returns the 57-element 2BHK residence scene JSON."""
+    p = REPO_ROOT / "fixtures" / "two_bhk_scene.json"
+    if p.exists():
+        return send_from_directory(p.parent, p.name)
+    return jsonify({"error": "2BHK scene not found"}), 404
+
+
+@app.route("/api/office", methods=["GET"])
+def get_office_scene():
+    """Returns the 45-element executive office suite scene JSON."""
+    p = REPO_ROOT / "fixtures" / "office_scene.json"
+    if p.exists():
+        return send_from_directory(p.parent, p.name)
+    return jsonify({"error": "Office scene not found"}), 404
 
 
 if __name__ == "__main__":

@@ -357,19 +357,16 @@ class SceneViewer {
       this.loadPreset("/api/legacy", "Legacy CAD Multileader (222 elements)");
     });
 
-    const btnRes = document.getElementById("btn-load-residential");
-    if (btnRes) {
-      btnRes.addEventListener("click", () => {
-        this.loadPreset("/api/residential", "Residential Flat (40 elements)");
-      });
-    }
+    const wireBtn = (id, url, label) => {
+      const btn = document.getElementById(id);
+      if (btn) btn.addEventListener("click", () => this.loadPreset(url, label));
+    };
 
-    const btnSyn = document.getElementById("btn-load-synthetic");
-    if (btnSyn) {
-      btnSyn.addEventListener("click", () => {
-        this.loadPreset("/api/synthetic", "Synthetic 3-Room (28 elements)");
-      });
-    }
+    wireBtn("btn-load-residential", "/api/residential", "Residential Flat (40 elements)");
+    wireBtn("btn-load-studio", "/api/studio", "Studio Apartment (29 elements)");
+    wireBtn("btn-load-twobhk", "/api/two-bhk", "2BHK Family Residence (57 elements)");
+    wireBtn("btn-load-office", "/api/office", "Executive Office Suite (45 elements)");
+    wireBtn("btn-load-synthetic", "/api/synthetic", "Synthetic 3-Room (28 elements)");
   }
 
   async processFiles(files) {
